@@ -20,30 +20,6 @@ concurrency:
    cancel-in-progress: true
 
 jobs:
-   create-release:
-      runs-on: ubuntu-latest
-      steps:
-         -  uses: actions/checkout@master
-
-         -  name: Generate Release Notes
-            run: bash ./.github/generate-release-notes.sh ${{ github.ref_name }} | tee RELEASE_NOTES.md
-
-         -  name: Archive Release
-            run: |
-               zip -r 5etools-${{ github.ref_name }}.zip . -x '*.git*' '*node_modules*' '*.github*' '*img*'
-
-         -  name: Archive Images
-            run: |
-               zip -r -s 500m img-${{ github.ref_name }}.zip img/
-
-         -  name: Upload Release
-            # Add the files one-by-one in an effort to avoid timeouts
-            run: |
-               hub release create -a 5etools-${{ github.ref_name }}.zip -F RELEASE_NOTES.md ${{ github.ref_name }}
-               for f in $(find . -name 'img-${{ github.ref_name }}.*' -print); do hub release edit ${{ github.ref_name }} -m '' -a $f; done
-            env:
-               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
    create-image:
       runs-on: ubuntu-latest
       steps:
