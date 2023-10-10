@@ -106,7 +106,7 @@ jobs:
                then
                   # Build a clean image
                   echo "Version is ${{ github.ref_name }}, doing a clean docker build"
-                  docker buildx --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $IMAGE_NAME .
+                  docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7 -t $IMAGE_NAME .
                else
                   # Build an incremental image...
                   echo "Version is ${{ github.ref_name }}, doing an incremental docker build"
